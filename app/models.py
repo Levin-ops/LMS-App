@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy_serializer import SerializerMixin
 import datetime
 
 db = SQLAlchemy()
@@ -14,13 +15,17 @@ class User(db.Model):
     password = db.Column(db.String(25), nullable = False)
     usertype = db.Column(db.String(25))
     registration_date = db.Column(db.TIMESTAMP)
+
+    student = db.relationship('Student', back_populates='user', uselist=False)
+    instructor = db.relationship('Instructor', back_populates='user', uselist=False)
     
+
 
 class Student(db.Model):
     __tablename__ = "students"
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id', name='fk_student_user_id'))
     student_fname = db.Column(db.String(255), nullable=False)
     student_lname = db.Column(db.String(255), nullable=False)
     email = db.Column(db.String(255), nullable=False, unique=True)
@@ -28,9 +33,8 @@ class Student(db.Model):
     usertype = db.Column(db.String(50), nullable=False)
     
     enrollments = db.relationship('Enrollment', back_populates='student')
-    instructor_profile = db.relationship('Instructor', back_populates='students', uselist=False)
     grades = db.relationship('Grade', back_populates='student')
-
+    user = db.relationship('User', back_populates='student', uselist=False)
 
 class StudentInstructorAssociation(db.Model):
     __tablename__ = "studentinstructorassociation"
@@ -41,15 +45,13 @@ class StudentInstructorAssociation(db.Model):
     start_date = db.Column(db.DateTime)
     end_date = db.Column(db.DateTime)
 
-    enrollment = db.relationship('Enrollment', back_populates = 'association')
-
 
 
 class Instructor(db.Model):
     __tablename__ = "instructors"
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('students.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     instructor_fname = db.Column(db.String(255), nullable=False)
     instructor_lname = db.Column(db.String(255), nullable=False)
     email = db.Column(db.String)
@@ -58,12 +60,11 @@ class Instructor(db.Model):
     specialization = db.Column(db.Text)
     usertype = db.Column(db.String(50))
     
-    students = db.relationship('Student', back_populates='instructor_profile')
-    courses = db.relationship('Course', back_populates='instructor', lazy='dynamic')
+    courses = db.relationship('Course', back_populates='instructor')
+    user = db.relationship('User', back_populates = 'instructor', uselist = False)
 
 
-
-class Course(db.Model):
+class Course(db.Model, SerializerMixin):
     __tablename__ = "courses"
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.Text, nullable=False)
@@ -74,6 +75,14 @@ class Course(db.Model):
     enrollments = db.relationship('Enrollment', back_populates='course', lazy='dynamic')
     instructor = db.relationship('Instructor', back_populates='courses')
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'title': self.title,
+            'description': self.description,
+            'duration': self.duration,
+            'instructor_id': self.instructor_id,
+        }
 
 class Grade(db.Model):
     __tablename__ = "grades"
@@ -100,5 +109,3 @@ class Enrollment(db.Model):
     student = db.relationship('Student', back_populates='enrollments')
     course = db.relationship('Course', back_populates='enrollments')
     grades = db.relationship('Grade', back_populates='enrollment')
-    association = db.relationship('StudentInstructorAssociation', back_populates='enrollment')
-

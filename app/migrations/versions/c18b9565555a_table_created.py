@@ -1,9 +1,8 @@
-"""initial Migration'
+"""table created
 
-
-Revision ID: 54d533ce7232
+Revision ID: c18b9565555a
 Revises: 
-Create Date: 2024-01-26 14:57:49.755590
+Create Date: 2024-01-26 17:06:54.258906
 
 """
 from alembic import op
@@ -11,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '54d533ce7232'
+revision = 'c18b9565555a'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -30,18 +29,6 @@ def upgrade():
     sa.Column('registration_date', sa.TIMESTAMP(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_table('students',
-    sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('user_id', sa.Integer(), nullable=True),
-    sa.Column('student_fname', sa.String(length=255), nullable=False),
-    sa.Column('student_lname', sa.String(length=255), nullable=False),
-    sa.Column('email', sa.String(length=255), nullable=False),
-    sa.Column('last_login', sa.TIMESTAMP(), nullable=True),
-    sa.Column('usertype', sa.String(length=50), nullable=False),
-    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('email')
-    )
     op.create_table('instructors',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=True),
@@ -52,15 +39,26 @@ def upgrade():
     sa.Column('experience', sa.Text(), nullable=True),
     sa.Column('specialization', sa.Text(), nullable=True),
     sa.Column('usertype', sa.String(length=50), nullable=True),
-    sa.ForeignKeyConstraint(['user_id'], ['students.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('students',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=True),
+    sa.Column('student_fname', sa.String(length=255), nullable=False),
+    sa.Column('student_lname', sa.String(length=255), nullable=False),
+    sa.Column('email', sa.String(length=255), nullable=False),
+    sa.Column('last_login', sa.TIMESTAMP(), nullable=True),
+    sa.Column('usertype', sa.String(length=50), nullable=False),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], name='fk_student_user_id'),
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('email')
     )
     op.create_table('courses',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('title', sa.Text(), nullable=False),
     sa.Column('description', sa.Text(), nullable=False),
-    sa.Column('start_date', sa.DateTime(), nullable=False),
-    sa.Column('end_date', sa.DateTime(), nullable=False),
+    sa.Column('duration', sa.String(), nullable=True),
     sa.Column('instructor_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['instructor_id'], ['instructors.id'], ),
     sa.PrimaryKeyConstraint('id')
@@ -107,7 +105,7 @@ def downgrade():
     op.drop_table('grades')
     op.drop_table('enrollments')
     op.drop_table('courses')
-    op.drop_table('instructors')
     op.drop_table('students')
+    op.drop_table('instructors')
     op.drop_table('users')
     # ### end Alembic commands ###
