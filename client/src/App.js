@@ -1,5 +1,7 @@
 import React,{ useState, useEffect } from 'react';
 import Login from './Components/Login';
+import StudentsList from './Components/StudentsList';
+
 
 function App() {
     const [user, setUser] = useState(null)
@@ -15,8 +17,13 @@ function App() {
     if(user){
       return <h2>Welcome, {user.email}</h2>
     }else{
-      return <Login onLogin={setUser}/>
+      return <>
+      <Login onLogin={setUser}/>
+      <StudentsList />
+      </>
     }
+
+    
 }
 
 export default App;
