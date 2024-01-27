@@ -1,10 +1,10 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy_serializer import SerializerMixin
-import datetime
+
 
 db = SQLAlchemy()
 
-class User(db.Model):
+class User(db.Model, SerializerMixin):
     __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -21,7 +21,7 @@ class User(db.Model):
     
 
 
-class Student(db.Model):
+class Student(db.Model, SerializerMixin):
     __tablename__ = "students"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -47,7 +47,8 @@ class StudentInstructorAssociation(db.Model):
 
 
 
-class Instructor(db.Model):
+class Instructor(db.Model, SerializerMixin):
+    # serialize_rules = ('-courses',)
     __tablename__ = "instructors"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -65,6 +66,7 @@ class Instructor(db.Model):
 
 
 class Course(db.Model, SerializerMixin):
+    serialize_rules = ('-instructor',)
     __tablename__ = "courses"
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.Text, nullable=False)
