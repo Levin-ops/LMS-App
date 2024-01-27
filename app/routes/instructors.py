@@ -7,12 +7,12 @@ instructor_bp = Blueprint('instructors', __name__)
 api = Api(instructor_bp)
 
 instructor_parser = reqparse.RequestParser()
-instructor_parser.add_argument('firstname', type = str, help = 'Course Title Needed')
-instructor_parser.add_argument('lastname', type = str, help = "Course description required")
-instructor_parser.add_argument('email', type = str, help = "Duration of course")
-instructor_parser.add_argument("bio", type = int, help = 'bio required')
-instructor_parser.add_argument("experience", type = int, help = 'experience required')
-instructor_parser.add_argument("specialization", type = int, help = 'specialization required')
+instructor_parser.add_argument('firstname', type = str, help = 'first name required')
+instructor_parser.add_argument('lastname', type = str, help = "last name required")
+instructor_parser.add_argument('email', type = str, help = "email required")
+instructor_parser.add_argument("bio", type = str, help = 'bio required')
+instructor_parser.add_argument("experience", type = str, help = 'experience required')
+instructor_parser.add_argument("specialization", type = str, help = 'specialization required')
 
 class Instructors(Resource):
     def get(self):
@@ -21,7 +21,25 @@ class Instructors(Resource):
         return response
 
     def post(self):
-        pass
+        args = instructor_parser.parse_args()
+
+
+        existing_instructor = Instructor.query.filter_by(email=args['email']).first()
+        if existing_instructor:
+            return {'message': 'Email address is already in use as an Instructor'}, 400
+        new_instructor = Instructor(
+            instructor_fname=args['firstname'],
+            instructor_lname=args['lastname'],
+            email=args['email'],
+            bio=args['bio'],
+            experience=args['experience'],
+            specialization=args['specialization']
+        )
+
+        db.session.add(new_instructor)
+        db.session.commit()
+
+        return {'message': 'Instructor added successfully'}, 201
 
 class InstructorByID(Resource):
     def get(self, id):

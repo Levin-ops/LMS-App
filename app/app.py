@@ -6,12 +6,14 @@ from routes.courses import courses_bp
 from routes.instructors import instructor_bp
 from routes.students import student_bp
 from routes.users import users_bp
+from routes.login import login_bp
 
 app = Flask(__name__)
 app.register_blueprint(courses_bp)
 app.register_blueprint(instructor_bp)
 app.register_blueprint(student_bp)
 app.register_blueprint(users_bp)
+app.register_blueprint(login_bp)
 
 app.config["SQLALCHEMY_DATABASE_URI"]= "sqlite:///mach.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False

@@ -1,4 +1,4 @@
-from flask import Blueprint
+from flask import Blueprint, session
 from flask_restful import reqparse, Api, Resource
 from models import Student, db
 
@@ -17,8 +17,31 @@ class Students(Resource):
         response = [student.to_dict() for student in students]
         return response
 
+class Students(Resource):
+    def get(self):
+        students = Student.query.all()
+        response = [student.to_dict() for student in students]
+        return response
+
     def post(self):
-        pass
+        args = student_parser.parse_args()
+
+        existing_student = Student.query.filter_by(email=args['email']).first()
+        if existing_student:
+            return {'message': 'Email address is already in use as a student'}, 400
+
+        new_student = Student(
+            student_fname=args['firstname'],
+            student_lname=args['lastname'],
+            email=args['email'],
+            usertype='student' 
+        )
+
+        db.session.add(new_student)
+        db.session.commit()
+
+        return {'message': 'Student added successfully', 'student_id': new_student.id}, 201
+
 
 class StudentsByID(Resource):
     def get(self, id):

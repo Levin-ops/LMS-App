@@ -21,7 +21,25 @@ class Users(Resource):
         return response
 
     def post(self):
-        pass
+        args = user_parser.parse_args()
+
+        existing_user = User.query.filter_by(email=args['email']).first()
+        if existing_user:
+            return {'message': f'User with this email address is already exists'}, 400
+
+        new_user = User(
+            firstname=args['firstname'],
+            lastname=args['lastname'],
+            photo_url=args['photo_url'],
+            email=args['email'],
+            password=args['password'],
+            usertype=args['usertype']
+        )
+
+        db.session.add(new_user)
+        db.session.commit()
+
+        return {'message': 'User created successfully'}, 201
 
 class UsersByID(Resource):
     def get(self, id):
