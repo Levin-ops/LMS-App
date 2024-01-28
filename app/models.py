@@ -19,6 +19,16 @@ class User(db.Model, SerializerMixin):
     student = db.relationship('Student', back_populates='user', uselist=False)
     instructor = db.relationship('Instructor', back_populates='user', uselist=False)
     
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'firstname': self.firstname,
+            'lastname': self.lastname,
+            'photo_url': self.photo_url,
+            'email': self.email,
+            'usertype': self.usertype,
+            'registration_date': self.registration_date,
+        }
 
 
 class Student(db.Model, SerializerMixin):
@@ -35,6 +45,18 @@ class Student(db.Model, SerializerMixin):
     enrollments = db.relationship('Enrollment', back_populates='student')
     grades = db.relationship('Grade', back_populates='student')
     user = db.relationship('User', back_populates='student', uselist=False)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'student_fname': self.student_fname,
+            'student_lname': self.student_lname,
+            'email': self.email,
+            'last_login': self.last_login,
+            'usertype': self.usertype,
+        }
+    
+
 
 class StudentInstructorAssociation(db.Model):
     __tablename__ = "studentinstructorassociation"
@@ -64,6 +86,17 @@ class Instructor(db.Model, SerializerMixin):
     courses = db.relationship('Course', back_populates='instructor')
     user = db.relationship('User', back_populates = 'instructor', uselist = False)
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'instructor_fname': self.instructor_fname,
+            'instructor_lname': self.instructor_lname,
+            'email': self.email,
+            'bio': self.bio,
+            'experience': self.experience,
+            'specialization': self.specialization,
+            'usertype': self.usertype,
+        }
 
 class Course(db.Model, SerializerMixin):
     serialize_rules = ('-instructor',)
@@ -96,7 +129,7 @@ class Grade(db.Model):
     evaluation_date = db.Column(db.TIMESTAMP)
 
     student = db.relationship('Student', back_populates='grades')    
-    enrollment = db.relationship('Enrollment', back_populates='grades')    
+    enrollment = db.relationship('Enrollment', back_populates='grade')    
 
 
 class Enrollment(db.Model):
@@ -105,9 +138,8 @@ class Enrollment(db.Model):
     course_id = db.Column(db.Integer, db.ForeignKey('courses.id'))
     student_id = db.Column(db.Integer, db.ForeignKey('students.id'))
     enrollment_date = db.Column(db.TIMESTAMP)
-    grades = db.Column(db.Integer)
     completion_status = db.Column(db.String(50))
 
     student = db.relationship('Student', back_populates='enrollments')
     course = db.relationship('Course', back_populates='enrollments')
-    grades = db.relationship('Grade', back_populates='enrollment')
+    grade = db.relationship('Grade', back_populates='enrollment')

@@ -1,6 +1,6 @@
 from flask import Blueprint, session
 from flask_restful import reqparse, Api, Resource
-from models import Student, db
+from models import Student, db, Enrollment, Grade
 
 student_bp = Blueprint('students', __name__)
 
@@ -75,9 +75,40 @@ class StudentsByID(Resource):
             return {'message': 'Student not found'}, 404
 
 
+class StudentDashboard(Resource):
+    def get(self):
+        student_email = session.get('user_email')
+        student = Student.query.filter_by(email = student_email).first()
 
+        if student:
+            enrollments = Enrollment.query.filter_by(student_id = student.id).all()
+            courses = []
 
+            for enrollment in enrollments:
+                grade_info = None
+                grade = Grade.query.filter_by(enrollment_id=enrollment.id).first()
+
+                if grade:
+                    grade_info = {
+                        'value': grade.grade_value,
+                        'feedback': grade.feedback,
+                        'evaluation_date': grade.evaluation_date.strftime('%Y-%m-%d'),
+                    }
+
+                courses.append({
+                    'id': enrollment.course.id,
+                    'name': enrollment.course.name,
+                    'enrollment_date': enrollment.enrollment_date.strftime('%Y-%m-%d'),
+                    'completion_status': enrollment.completion_status,
+                    'grade': grade_info,
+                })
+
+            return {'courses': courses}
+            
+        else:
+            return{'message': 'Student not found'}, 404
 
 
 api.add_resource(Students, '/students')
 api.add_resource(StudentsByID, '/students/<int:id>')
+api.add_resource(StudentDashboard, '/student/dashboard')
