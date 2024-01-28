@@ -6,7 +6,7 @@ function RegistrationForm (){
     lastname: '',
     email: '',
     password: '',
-    usertype: 'student', // Default value for the dropdown
+    usertype: 'student', 
     bio: '',
     specialization: '',
     experience : '',
@@ -35,10 +35,11 @@ function RegistrationForm (){
       if (!response.ok) {
         throw new Error('Registration failed');
       }
-
-      const data = await response.json();
-      console.log('Registration successful:', data);
-    } catch (error) {
+      window.location.href = '/login'
+      console.log('Registration successful:');
+    } 
+    
+    catch (error) {
       console.error('Error during registration:', error.message);
     }
   };
@@ -91,7 +92,6 @@ function RegistrationForm (){
         </label>
         <br />
 
-        {/* Additional fields based on user type */}
         {formData.usertype === 'instructor' && (
           <>
             <label>

@@ -43,4 +43,4 @@ class EnrollmentResource(Resource):
         else:
             return {'message': 'Student not found'}, 404
 
-api.add_resource(EnrollmentResource, '/enroll')
+api.add_resource(EnrollmentResource, '/enrollments')
