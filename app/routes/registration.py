@@ -27,9 +27,10 @@ class Registration(Resource):
             firstname=args['firstname'],
             lastname=args['lastname'],
             email=args['email'],
-            password=args['password'],
             usertype=args['usertype']
         )
+        
+        new_user.password_hasher(password = args['password'])
 
         db.session.add(new_user)
         db.session.commit()

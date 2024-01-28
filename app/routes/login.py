@@ -2,6 +2,8 @@ from flask import Blueprint, jsonify, request, session
 from flask_restful import  Api, Resource
 from models import User, db
 from flask_cors import CORS
+from flask_jwt_extended import create_access_token, create_refresh_token
+
 
 login_bp = Blueprint('login', __name__)
 CORS(login_bp)
@@ -9,24 +11,25 @@ api = Api(login_bp)
 
 class Login(Resource):
     def post(self):
-        try:
-            data = request.get_json()
+        data = request.get_json()
 
+        user = User.get_user_by_email(email = data.get('email'))
 
-            if 'email' not in data or 'password' not in data:
-                return {'message': 'Missing email or password'}, 400
-
-            user = User.query.filter_by(email=data['email'], password=data['password']).first()
-
-            if user:
-                session['user_id'] = user.id
-                return {'message': 'Login successful', 'user': user.to_dict()}
+        if user:
             
-            else:
-                return {'message': 'Invalid email or password'}, 401
+            access_token = create_access_token(identity= user.email)
+            refresh_token = create_refresh_token(identity= user.email)
+            
+            return {
+                    "message": "Logged in",
+                    "tokens": {
+                        "access_token":access_token,
+                        "refresh_token": refresh_token
+                    }
+                }, 200
 
-        except Exception as e:
-            return {'message': 'An error occurred', 'error': str(e)}, 500
+        return  {"error":"invalid email or password"}, 400
+        
 
 class CheckSession(Resource):
     def get(self):
