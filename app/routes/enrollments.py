@@ -30,8 +30,8 @@ class EnrollmentResource(Resource):
                 new_enrollment = Enrollment(
                     student=student,
                     course=course,
-                    enrollment_date=datetime.now(),  # Replace with the actual enrollment date logic
-                    completion_status='In Progress',  # Set initial completion status
+                    enrollment_date=datetime.now(),  
+                    completion_status='In Progress', 
                 )
 
                 db.session.add(new_enrollment)
