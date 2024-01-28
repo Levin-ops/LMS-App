@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import './Courses.css'
 
 function Courses (){
   const [courses, setCourses] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState(null);
 
   useEffect(() => {
-    // Fetch the list of available courses with instructor details from the backend
     const fetchCourses = async () => {
       try {
         const response = await fetch('http://127.0.0.1:5555/courses');
@@ -45,7 +45,6 @@ function Courses (){
       const data = await response.json();
       console.log('Enrollment successful:', data);
 
-      // Handle any UI updates or redirection after successful enrollment
     } catch (error) {
       console.error('Error during enrollment:', error.message);
     }

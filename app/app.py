@@ -24,7 +24,7 @@ db.init_app(app)
 migrate = Migrate(app, db)
 api = Api(app)
 
-# JWT_SECRET_KEY = 
+
 jwt = JWTManager()
 jwt.init_app(app)
 

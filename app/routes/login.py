@@ -30,7 +30,7 @@ class Login(Resource):
 
         return  {"error":"invalid email or password"}, 400
         
-
+# Not Fully implemented
 class CheckSession(Resource):
     def get(self):
         try:

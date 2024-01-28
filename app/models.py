@@ -88,7 +88,6 @@ class StudentInstructorAssociation(db.Model):
 
 
 class Instructor(db.Model, SerializerMixin):
-    # serialize_rules = ('-courses',)
     __tablename__ = "instructors"
 
     id = db.Column(db.Integer, primary_key=True)
