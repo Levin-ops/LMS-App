@@ -23,3 +23,24 @@ faqs.forEach((faq) => {
     }
   });
 });
+
+// display Nav
+
+const navMenu = document.querySelector(".nav_menu");
+const menuBtn = document.querySelector("#open_menu_btn");
+const closeBtn = document.querySelector("#close_menu_btn");
+
+menuBtn.addEventListener("click", () => {
+  navMenu.style.display = "flex";
+  closeBtn.style.display = "inline-block";
+  menuBtn.style.display = "none";
+});
+
+// close Menu
+const closeNav = () => {
+  navMenu.style.display = "none";
+  closeBtn.style.display = "none";
+  menuBtn.style.display = "inline-block";
+};
+
+closeBtn.addEventListener("click", closeNav);
