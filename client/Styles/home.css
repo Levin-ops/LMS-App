@@ -126,7 +126,8 @@ nav {
   align-items: center;
 }
 
-nav button#closeMenuBtn {
+#open_menu_btn,
+#closeMenuBtn {
   display: none;
 }
 
@@ -421,7 +422,8 @@ footer ul li a:hover {
   }
 
   /* Navbar */
-  nav button {
+  button#open_menu_btn,
+  button#close_menu_btn {
     display: inline-block;
     background: transparent;
     font-size: 1.8rem;

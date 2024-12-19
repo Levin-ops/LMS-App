@@ -1,0 +1,192 @@
+:root {
+  --primary-color: #2b7a4b; /* African green, reflecting growth and renewal */
+  --success-color: #39a96b; /* Bright, hopeful green */
+  --warning-color: #f7c84b;
+  --error-color: #d1495b; /* Earthy red */
+  --error-color-variant: rgba(209, 73, 91, 0.4); /* Softer variant */
+  --white-color: #ffffff;
+  --light-color: rgba(255, 255, 255, 0.7);
+
+  --black-color: #3d2c2e; /* Deep, earthy brown */
+  --bg-color: #2d3436; /* Charcoal or deep greenish charcoal */
+  --bg-color-variant: #354f52; /* Dark forest green */
+  --bg-color-variant-2: #52796f; /* Soft sage or sea green */
+
+  --container-width-lg: 80%;
+  --container-width-md: 90%;
+  --container-width-sm: 94%;
+
+  --transition: all 400ms ease;
+}
+
+/* Achievements */
+.about_achievement {
+  margin-top: 3rem;
+}
+
+.about_achievement_container {
+  display: grid;
+  grid-template-columns: 40% 60%;
+  gap: 5rem;
+}
+
+.about_achievement_right {
+  margin: 1.6rem 0 2.5rem;
+}
+
+.achievement_cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.achievement_card {
+  background: var(--bg-color-variant);
+  padding: 1.6rem;
+  border-radius: 1rem;
+  text-align: center;
+  transition: var(--transition);
+}
+
+.achievement_card:hover {
+  background: var(--bg-color-variant-2);
+  box-shadow: 0 3rem 3rem rgba(0, 0, 0, 0.3);
+}
+
+.achievement_icon {
+  background: var(--error-color);
+  padding: 0.6rem;
+  border-radius: 1rem;
+  display: inline-block;
+  margin-bottom: 2rem;
+  font-size: 2rem;
+}
+
+.achievement_card:nth-child(2) .achievement_icon {
+  background: var(--bg-color);
+}
+
+.achievement_card:nth-child(3) .achievement_icon {
+  background: var(--success-color);
+}
+
+.achievement_card p {
+  margin-top: 1rem;
+}
+
+/* Teacher Styles */
+
+.team {
+  background: var(--bg-color);
+  box-shadow: inset 0 0 3rem rgba(0, 0, 0, 0.5);
+}
+
+.team_container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+}
+
+.team_member {
+  background: var(--bg-color-variant-2);
+  padding: 1.2rem;
+  border: 1px solid transparent;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.5rem;
+}
+
+.team_member:hover {
+  background: transparent;
+  border: var(--primary-color);
+}
+
+.team_member_image img {
+  filter: saturate(0.3);
+  border-radius: 0.3rem;
+}
+
+.team_member:hover img {
+  filter: saturate(1);
+}
+
+.team_member_info {
+  text-align: center;
+  margin-top: 1.4rem;
+}
+
+.team_member_info p {
+  color: var(--light-color);
+}
+
+.team_member_socials {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: -100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--primary-color);
+  border-radius: 1rem 0 0 1rem;
+  box-shadow: -2rem 0 2rem rgba(0, 0, 0, 0.3);
+  transition: var(--transition);
+}
+
+.team_member:hover .team_member_socials {
+  right: 0;
+}
+
+.team_member_socials a {
+  padding: 1rem;
+}
+
+/* Responsiveness */
+/* tabs */
+
+@media screen and (max-width: 1024px) {
+  .about_achievement {
+    margin: 1rem;
+  }
+
+  .about_achievement_container {
+    grid-template-columns: 1fr;
+    gap: 4rem;
+  }
+
+  .about_achievement_left {
+    width: 80%;
+    margin: 0;
+    justify-self: center;
+  }
+
+  .team_container {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.8rem;
+  }
+
+  .team_member {
+    padding: 1rem;
+  }
+}
+
+/* Mobile */
+@media screen and (max-width: 600px) {
+  .achievement_cards {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.7rem;
+  }
+
+  .team_container {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.7rem;
+  }
+
+  .team_member {
+    padding: 0;
+  }
+
+  .team_member p {
+    margin-bottom: 1.5rem;
+  }
+}
